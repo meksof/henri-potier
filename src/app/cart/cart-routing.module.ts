@@ -1,16 +1,16 @@
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
+import { CartComponent } from "./cart.component";
 
 const routes: Routes = [
   {
-    path: "",
-    redirectTo: "/book-list",
-    pathMatch: "full"
+    path: "cart",
+    component: CartComponent
   }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class CartRoutingModule {}

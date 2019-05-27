@@ -1,0 +1,59 @@
+<div class="bd-callout bd-callout-info" *ngIf="!cartItems || cartItems.length == 0; else cart;">
+  <h2 class="text-center">
+    Veuillez Ajouter un article au panier
+  </h2>
+</div>
+<ng-template #cart>
+
+  <table class="table" *ngIf="cartItems && cartItems.length > 0">
+    <thead class="thead-light">
+      <tr>
+        <th>Article</th>
+        <th class="text-right">Prix</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of cartItems">
+        <td>{{ item.title }}</td>
+        <td class="text-right">{{ item.price | currency:'EUR'  }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <table class="table mt-5" *ngIf="cartItems && cartItems.length > 0">
+    <thead class="thead-light">
+      <tr>
+        <th colspan="2">&nbsp;</th>
+        <th class="text-right">TOTAL</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td colspan="2">&nbsp;</td>
+        <td class="text-right">
+          <span class="fz18">{{ totalPrice | currency:'EUR' }}</span>
+        </td>
+      </tr>
+      <tr>
+        <th colspan="2">&nbsp;</th>
+        <th class="text-right">REMISE</th>
+      </tr>
+      <tr>
+        <td colspan="2">&nbsp;</td>
+        <td class="text-right">
+          <span class="text-success fz18">{{ discount| currency:'EUR' }}</span>
+        </td>
+      </tr>
+      <tr>
+        <th colspan="2">&nbsp;</th>
+        <th class="text-right">NET À PAYER</th>
+      </tr>
+      <tr>
+        <td colspan="2">&nbsp;</td>
+        <td class="text-right">
+          <span class="text-success fz18 fwb">{{ totalAfterDiscount | currency:'EUR' }}</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</ng-template>
