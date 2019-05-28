@@ -8,8 +8,12 @@ import { Component, Input, Output, EventEmitter } from "@angular/core";
 export class BookFilterComponent {
   @Output() onFilterChange: EventEmitter<string> = new EventEmitter();
 
-  constructor() {}
-
+  /**
+   * Déclencher l'évenement de filtre de recherche
+   *
+   * @param {*} $event
+   * @memberof BookFilterComponent
+   */
   firefilterEvent($event) {
     this.onFilterChange.emit($event.target.value);
   }

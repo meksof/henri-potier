@@ -1,5 +1,6 @@
 import { Component } from "@angular/core";
 import { CartService } from "./cart/cart.service";
+import { Observable } from "rxjs";
 
 @Component({
   selector: "app-root",
@@ -8,14 +9,17 @@ import { CartService } from "./cart/cart.service";
 })
 export class AppComponent {
   title = "henri-potier";
-  cartTotalItems$ = 0;
+  /**
+   * Représente le nombre total d'articles dans le panier
+   *
+   * @memberof AppComponent
+   */
+  cartTotalItems$: Observable<number>;
 
   constructor(private cartService: CartService) { }
 
   ngOnInit() {
     // get total cart items
-    this.cartService.totalCartItems.subscribe((value: number) => {
-      this.cartTotalItems$ = value;
-    });
+    this.cartTotalItems$ = this.cartService.totalCartItems;
   }
 }

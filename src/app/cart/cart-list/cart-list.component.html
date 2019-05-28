@@ -4,7 +4,6 @@
   </h2>
 </div>
 <ng-template #cart>
-
   <table class="table" *ngIf="cartItems && cartItems.length > 0">
     <thead class="thead-light">
       <tr>
@@ -31,7 +30,7 @@
       <tr>
         <td colspan="2">&nbsp;</td>
         <td class="text-right">
-          <span class="fz18">{{ totalPrice | currency:'EUR' }}</span>
+          <span class="fz18">{{ total | currency:'EUR' }}</span>
         </td>
       </tr>
       <tr>

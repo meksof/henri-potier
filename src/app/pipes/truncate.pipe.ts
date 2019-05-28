@@ -1,8 +1,15 @@
 import { Pipe, PipeTransform } from "@angular/core";
-
+/**
+ * Pipe pour trancher une chaine de caractères très longue
+ *
+ * @export
+ * @class TruncatePipe
+ * @implements {PipeTransform}
+ */
 @Pipe({
   name: "truncate"
 })
+
 export class TruncatePipe implements PipeTransform {
   transform(value: string, args: string[]): string {
     if (!value) return "";
