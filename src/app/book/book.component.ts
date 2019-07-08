@@ -38,7 +38,7 @@ export class BookComponent implements OnInit {
   constructor(
     private bookService: BookService,
     private cartService: CartService
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.bookService.getBooks().subscribe(books => {
@@ -67,4 +67,9 @@ export class BookComponent implements OnInit {
   removeFromCart(book: Book) {
     this.cartService.removeBookFromCart(book);
   }
+
+  incrementQuantity(value: number): number {
+    return ++value;
+  }
+
 }
