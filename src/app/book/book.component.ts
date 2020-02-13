@@ -1,10 +1,10 @@
-import { Component, OnInit } from "@angular/core";
-import { BookService } from "./book.service";
-import { Book } from "./book";
-import { CartService } from "../cart/cart.service";
+import { Component, OnInit } from '@angular/core';
+import { BookService } from './book.service';
+import { Book } from './book.type';
+import { CartService } from '../cart/cart.service';
 
 @Component({
-  selector: "app-book",
+  selector: 'app-book',
   template: `
     <app-book-filter
       (onFilterChange)="performFilter($event)"
@@ -23,15 +23,11 @@ export class BookComponent implements OnInit {
   /**
    * Le filtre de recherche appliqué à la liste des articles
    *
-   * @type {string}
-   * @memberof BookComponent
    */
   filterList: string;
   /**
    * Liste des articles
    *
-   * @type {Book[]}
-   * @memberof BookComponent
    */
   books: Book[];
 
@@ -52,8 +48,6 @@ export class BookComponent implements OnInit {
   /**
    * Déclencher l'évenement d'ajout d'un article au panier
    *
-   * @param {Book} book
-   * @memberof BookComponent
    */
   addToCart(book: Book) {
     this.cartService.addBookToCart(book);
@@ -61,15 +55,8 @@ export class BookComponent implements OnInit {
   /**
    * Déclencher l'évenement de suppression d'un article au panier
    *
-   * @param {Book} book
-   * @memberof BookComponent
    */
   removeFromCart(book: Book) {
     this.cartService.removeBookFromCart(book);
   }
-
-  incrementQuantity(value: number): number {
-    return ++value;
-  }
-
 }

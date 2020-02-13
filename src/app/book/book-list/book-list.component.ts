@@ -1,19 +1,24 @@
-import { Component, Input, Output, EventEmitter } from "@angular/core";
-import { Book } from "../book";
-import { CartService } from "src/app/cart/cart.service";
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Book } from '../book.type';
+import { CartService } from 'src/app/cart/cart.service';
+
+// tslint:disable: no-output-rename
+// tslint:disable: no-output-on-prefix
 
 @Component({
-  selector: "app-book-list",
-  templateUrl: "./book-list.component.html",
-  styleUrls: ["./book-list.component.scss"]
+  selector: 'app-book-list',
+  templateUrl: './book-list.component.html',
+  styleUrls: ['./book-list.component.scss']
 })
 export class BookListComponent {
   private _books: Book[];
   filteredBooks: Book[];
   _filterList: string;
 
-  @Output("onAddToCart") onAddToCart: EventEmitter<Book> = new EventEmitter();
-  @Output("onRemoveFromCart") onRemoveFromCart: EventEmitter<Book> = new EventEmitter();
+  @Output('onAddToCart') onAddToCart: EventEmitter<Book> = new EventEmitter();
+  @Output('onRemoveFromCart') onRemoveFromCart: EventEmitter<
+    Book
+  > = new EventEmitter();
 
   @Input()
   get books(): Book[] {

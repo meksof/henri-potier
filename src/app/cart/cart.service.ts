@@ -1,21 +1,18 @@
-import { Injectable, Inject } from "@angular/core";
-import { LOCAL_STORAGE, StorageService } from "ngx-webstorage-service";
-import { Book } from "../book/book";
-import { BehaviorSubject } from "rxjs";
-
+import { Injectable, Inject } from '@angular/core';
+import { LOCAL_STORAGE, StorageService } from 'ngx-webstorage-service';
+import { Book } from '../book/book.type';
+import { BehaviorSubject } from 'rxjs';
 
 // key that is used to access the data in local storageconst
-const STORAGE_KEY = "local_cartitems";
+const STORAGE_KEY = 'local_cartitems';
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root'
 })
 export class CartService {
   /**
    * Le montant total du panier en tant que observable
    *
-   * @type {BehaviorSubject<number>}
-   * @memberof CartService
    */
   public totalCartItems: BehaviorSubject<number> = new BehaviorSubject(0);
 
@@ -24,13 +21,11 @@ export class CartService {
   }
   /**
    * Mettre à jour la valeur du nombre total d'articles dans
-   * le panier, et informer les autres composants que la valeur 
+   * le panier, et informer les autres composants que la valeur
    * a changé
    *
-   * @returns {*}
-   * @memberof CartService
    */
-  updateTotalCartItems(): any {
+  updateTotalCartItems(): void {
     // get array of books from local storage
     const currentBooks = this.getBooksFromCart();
     // update total items value
@@ -39,10 +34,8 @@ export class CartService {
   /**
    * Ajouter un article au panier
    *
-   * @param {Book} book
-   * @memberof CartService
    */
-  addBookToCart(book: Book) {
+  addBookToCart(book: Book): void {
     // get array of books from local storage
     const currentBooks = this.getBooksFromCart();
     // push new book to array
@@ -54,10 +47,8 @@ export class CartService {
   /**
    * Enlever un article du panier
    *
-   * @param {Book} book
-   * @memberof CartService
    */
-  removeBookFromCart(book: Book) {
+  removeBookFromCart(book: Book): void {
     // get array of books from local storage
     let currentBooks = this.getBooksFromCart();
     // remove book from list
@@ -69,8 +60,6 @@ export class CartService {
   /**
    * Retourner la liste des articles dans le panier
    *
-   * @returns {Book[]}
-   * @memberof CartService
    */
   getBooksFromCart(): Book[] {
     return this.storage.get(STORAGE_KEY) || [];
@@ -78,9 +67,6 @@ export class CartService {
   /**
    * Permet de savoir Si l'article existe ou non
    *
-   * @param {Book} book
-   * @returns {boolean}
-   * @memberof CartService
    */
   bookExistInCard(book: Book): boolean {
     const currentBooks = this.getBooksFromCart();

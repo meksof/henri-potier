@@ -1,30 +1,26 @@
-import { Injectable } from "@angular/core";
-import { Book } from "./book";
-import { Observable, of, throwError } from "rxjs";
-import { HttpClient } from "@angular/common/http";
-import { catchError, tap, map } from "rxjs/operators";
-import { CartService } from "../cart/cart.service";
+import { Injectable } from '@angular/core';
+import { Book } from './book.type';
+import { Observable, of, throwError } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { catchError, tap, map } from 'rxjs/operators';
+import { CartService } from '../cart/cart.service';
+import { OffreCommerciale } from './offre-commerciale.type';
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root'
 })
 export class BookService {
-  private booksUrl = "http://henri-potier.xebia.fr/books";
+  private booksUrl = 'http://henri-potier.xebia.fr/books';
   /**
    * Liste des livres mis en cache
    *
-   * @private
-   * @type {Book[]}
-   * @memberof BookService
    */
   private books: Book[];
 
-  constructor(private http: HttpClient, private cartService: CartService) { }
+  constructor(private http: HttpClient, private cartService: CartService) {}
   /**
    * Retourner la liste des livres à partir de l'api
    *
-   * @returns {Observable<Book[]>}
-   * @memberof BookService
    */
   getBooks(): Observable<Book[]> {
     // Rechercher dans le cache la liste des livres
@@ -41,30 +37,35 @@ export class BookService {
   /**
    * Retourner la liste des offres commerciales à partir de l'api
    *
-   * @returns {(Observable<any> | null)}
-   * @memberof BookService
    */
-  getOffreCommerciales(): Observable<any> | null {
-    let booksIsbnList = '';
+  getOffreCommerciales(): Observable<OffreCommerciale> | null {
     // get cart book list from local storage
     const books = this.cartService.getBooksFromCart();
 
-    if (!books || books.length == 0) { return null; }
+    if (!books || books.length === 0) {
+      return null;
+    }
 
-    // Construire la liste des isbn pour le webservice
+    return this.http.get<OffreCommerciale>(
+      this.booksUrl + '/' + this.arrayToBookList(books) + '/commercialOffers'
+    );
+  }
+  /**
+   * Construire la liste des isbn pour le webservice
+   *
+   */
+  private arrayToBookList(books: Book[]) {
+    let booksIsbnList = '';
     books.forEach(book => {
       booksIsbnList += book.isbn + ',';
-    })
+    });
     booksIsbnList = booksIsbnList.replace(/,$/, '');
-    return this.http.get(this.booksUrl + '/' + booksIsbnList + '/commercialOffers');
+    return booksIsbnList;
   }
+
   /**
    * Gérer les erreurs http de l'api
    *
-   * @private
-   * @param {*} err
-   * @returns
-   * @memberof BookService
    */
   private handleError(err) {
     let errorMessage: string;
@@ -73,7 +74,7 @@ export class BookService {
     } else {
       errorMessage = `Backend returned code ${err.status}: ${err.body.error}`;
     }
-    console.error(err);
+
     return throwError(errorMessage);
   }
 }
