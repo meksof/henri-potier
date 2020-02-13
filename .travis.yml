@@ -1,5 +1,4 @@
 dist: trusty
-sudo: false
 
 language: node_js
 node_js:
@@ -16,4 +15,6 @@ install:
   - npm install
 
 script:
-  - npm run test -- --watch=false --no-progress --browsers=ChromeHeadlessNoSandbox
+  - npm run test:full -- --no-progress --browsers=ChromeHeadlessNoSandbox
+after_success:
+  - bash <(curl -s https://codecov.io/bash)

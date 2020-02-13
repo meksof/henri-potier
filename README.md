@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/meksof/henri-potier.svg?branch=master)](https://travis-ci.org/meksof/henri-potier)
+[![codecov](https://codecov.io/gh/meksof/henri-potier/branch/master/graph/badge.svg)](https://codecov.io/gh/meksof/henri-potier)
+
 # HenriPotier
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.0.3.
