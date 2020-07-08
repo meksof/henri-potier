@@ -12,13 +12,9 @@ import { CartService } from 'src/app/cart/cart.service';
 })
 export class BookListComponent {
   private _books: Book[];
-  filteredBooks: Book[];
-  _filterList: string;
 
-  @Output('onAddToCart') onAddToCart: EventEmitter<Book> = new EventEmitter();
-  @Output('onRemoveFromCart') onRemoveFromCart: EventEmitter<
-    Book
-  > = new EventEmitter();
+  @Output('addToCart') onAddToCart: EventEmitter<Book> = new EventEmitter();
+  @Output('removeFromCart') onRemoveFromCart: EventEmitter<Book> = new EventEmitter();
 
   @Input()
   get books(): Book[] {
@@ -26,30 +22,9 @@ export class BookListComponent {
   }
   set books(value: Book[]) {
     this._books = value;
-    this.filteredBooks = value;
   }
 
-  @Input()
-  get filterList(): string {
-    return this._filterList;
-  }
-  set filterList(value: string) {
-    this._filterList = value;
-    this.filteredBooks = this.filterList
-      ? this.performFilter(this.filterList)
-      : this.books;
-  }
-
-  constructor(private cartService: CartService) {}
-
-  performFilter(filterBy: string): Book[] {
-    filterBy = filterBy.toLocaleLowerCase();
-    return this.books.filter(
-      (book: Book) =>
-        book.title.toLocaleLowerCase().indexOf(filterBy.toLocaleLowerCase()) !==
-        -1
-    );
-  }
+  constructor(private cartService: CartService) { }
 
   addToCart($mouseEvent, book: Book) {
     if (book) {

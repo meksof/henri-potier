@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Book } from './book.type';
-import { Observable, of, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { catchError, tap, map } from 'rxjs/operators';
+import { Observable, of, throwError } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
+import { Book } from './book.type';
 import { CartService } from '../cart/cart.service';
 import { OffreCommerciale } from './offre-commerciale.type';
 
@@ -11,33 +11,20 @@ import { OffreCommerciale } from './offre-commerciale.type';
 })
 export class BookService {
   private booksUrl = 'http://henri-potier.xebia.fr/books';
-  /**
-   * Liste des livres mis en cache
-   *
-   */
-  private books: Book[];
 
-  constructor(private http: HttpClient, private cartService: CartService) {}
-  /**
-   * Retourner la liste des livres à partir de l'api
-   *
-   */
+  public books$ = this.getBooks();
+
+  constructor(
+    private http: HttpClient,
+    private cartService: CartService
+  ) { }
+
   getBooks(): Observable<Book[]> {
-    // Rechercher dans le cache la liste des livres
-    if (this.books) {
-      return of(this.books);
-    }
-
     return this.http.get<Book[]>(this.booksUrl).pipe(
-      tap(data => console.log(JSON.stringify(data))),
-      tap(data => (this.books = data)),
       catchError(this.handleError)
     );
   }
-  /**
-   * Retourner la liste des offres commerciales à partir de l'api
-   *
-   */
+
   getOffreCommerciales(): Observable<OffreCommerciale> | null {
     // get cart book list from local storage
     const books = this.cartService.getBooksFromCart();
@@ -50,10 +37,7 @@ export class BookService {
       this.booksUrl + '/' + this.arrayToBookList(books) + '/commercialOffers'
     );
   }
-  /**
-   * Construire la liste des isbn pour le webservice
-   *
-   */
+
   private arrayToBookList(books: Book[]) {
     let booksIsbnList = '';
     books.forEach(book => {
@@ -63,10 +47,6 @@ export class BookService {
     return booksIsbnList;
   }
 
-  /**
-   * Gérer les erreurs http de l'api
-   *
-   */
   private handleError(err) {
     let errorMessage: string;
     if (err && err.error instanceof ErrorEvent) {
