@@ -5,6 +5,7 @@ import { BookServiceMock } from '../book/book.service.mock';
 
 describe('BookComponent', () => {
   let component: BookComponent;
+  let service: BookService;
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
@@ -13,12 +14,11 @@ describe('BookComponent', () => {
       ]
     });
     component = TestBed.get(BookComponent);
+    service = TestBed.get(BookService);
   });
 
-  it('should Load the books list from the service at component INIT', () => {
-    component.ngOnInit();
-
-    expect(component.books).toEqual([
+  it('should Load the books list from the service at component INIT', (done) => {
+    const expectedResult: any = [
       {
         isbn: 'string',
         title: 'string',
@@ -26,6 +26,12 @@ describe('BookComponent', () => {
         cover: 'string',
         synopsis: ['string']
       }
-    ]);
+    ];
+    let returnedResult = {};
+    component.books$.subscribe(books => {
+      returnedResult = books;
+      done();
+    });
+    expect(returnedResult).toEqual(expectedResult);
   });
 });

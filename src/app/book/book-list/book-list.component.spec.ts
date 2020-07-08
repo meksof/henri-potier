@@ -1,8 +1,8 @@
-import { TestBed } from "@angular/core/testing";
+import { TestBed } from '@angular/core/testing';
 
-import { BookListComponent } from "./book-list.component";
+import { BookListComponent } from './book-list.component';
 
-describe("BookListComponent", () => {
+describe('BookListComponent', () => {
   let component: BookListComponent;
 
   beforeEach(() => {
