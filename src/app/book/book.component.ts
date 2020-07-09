@@ -1,62 +1,64 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { BookService } from './book.service';
 import { Book } from './book.type';
 import { CartService } from '../cart/cart.service';
+import { Subject, combineLatest, forkJoin, BehaviorSubject } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-book',
   template: `
     <app-book-filter
-      (onFilterChange)="performFilter($event)"
+      (filterChange)="performFilter($event)"
       #filterCriteria
     ></app-book-filter>
     <app-book-list
       class="row mt-3"
-      [filterList]="filterList"
-      [books]="books"
-      (onAddToCart)="addToCart($event)"
-      (onRemoveFromCart)="removeFromCart($event)"
+      [books]="books$ | async"
+      (addToCart)="addToCart($event)"
+      (removeFromCart)="removeFromCart($event)"
     ></app-book-list>
   `
 })
-export class BookComponent implements OnInit {
+export class BookComponent implements OnDestroy {
   /**
    * Le filtre de recherche appliqué à la liste des articles
    *
    */
-  filterList: string;
+  private bookFilter$ = new BehaviorSubject<string>('');
+  bookFilteredAction$ = this.bookFilter$.asObservable();
   /**
    * Liste des articles
    *
    */
-  books: Book[];
+  public books$ = combineLatest([
+    this.bookService.books$,
+    this.bookFilteredAction$
+  ]).pipe(
+    map(([books, filterBy]) => books.filter((book: Book) =>
+      filterBy ? book.title.toLocaleLowerCase().indexOf(filterBy.toLocaleLowerCase()) !== -1
+        : true
+    ))
+  );
 
   constructor(
     private bookService: BookService,
     private cartService: CartService
-  ) {}
-
-  ngOnInit() {
-    this.bookService.getBooks().subscribe(books => {
-      this.books = books;
-    });
-  }
+  ) { }
 
   performFilter(filterBy: string) {
-    this.filterList = filterBy;
+    this.bookFilter$.next(filterBy);
   }
-  /**
-   * Déclencher l'évenement d'ajout d'un article au panier
-   *
-   */
+
   addToCart(book: Book) {
     this.cartService.addBookToCart(book);
   }
-  /**
-   * Déclencher l'évenement de suppression d'un article au panier
-   *
-   */
+
   removeFromCart(book: Book) {
     this.cartService.removeBookFromCart(book);
+  }
+
+  ngOnDestroy(): void {
+    this.bookFilter$.complete();
   }
 }

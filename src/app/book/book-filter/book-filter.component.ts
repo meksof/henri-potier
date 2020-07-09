@@ -1,20 +1,20 @@
-import { Component, Input, Output, EventEmitter } from "@angular/core";
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
-  selector: "app-book-filter",
-  templateUrl: "./book-filter.component.html",
-  styleUrls: ["./book-filter.component.scss"]
+  selector: 'app-book-filter',
+  template: `<input
+    type="text"
+    id="search"
+    class="form-control"
+    placeholder="rechercher un livre par titre"
+    (keyup)="firefilterEvent($event)"
+  />`,
+  styleUrls: ['./book-filter.component.scss']
 })
 export class BookFilterComponent {
-  @Output() onFilterChange: EventEmitter<string> = new EventEmitter();
+  @Output() filterChange: EventEmitter<string> = new EventEmitter();
 
-  /**
-   * Déclencher l'évenement de filtre de recherche
-   *
-   * @param {*} $event
-   * @memberof BookFilterComponent
-   */
   firefilterEvent($event) {
-    this.onFilterChange.emit($event.target.value);
+    this.filterChange.emit($event.target.value);
   }
 }
