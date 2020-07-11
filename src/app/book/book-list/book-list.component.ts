@@ -2,8 +2,6 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { Book } from '../book.type';
 import { CartService } from 'src/app/cart/cart.service';
 
-// tslint:disable: no-output-rename
-// tslint:disable: no-output-on-prefix
 
 @Component({
   selector: 'app-book-list',
@@ -13,8 +11,8 @@ import { CartService } from 'src/app/cart/cart.service';
 export class BookListComponent {
   private _books: Book[];
 
-  @Output('addToCart') onAddToCart: EventEmitter<Book> = new EventEmitter();
-  @Output('removeFromCart') onRemoveFromCart: EventEmitter<Book> = new EventEmitter();
+  @Output() addToCart: EventEmitter<Book> = new EventEmitter();
+  @Output() removeFromCart: EventEmitter<Book> = new EventEmitter();
 
   @Input()
   get books(): Book[] {
@@ -26,15 +24,15 @@ export class BookListComponent {
 
   constructor(private cartService: CartService) { }
 
-  addToCart($mouseEvent, book: Book) {
+  addBookToCart($mouseEvent, book: Book) {
     if (book) {
-      this.onAddToCart.emit(book);
+      this.addToCart.emit(book);
     }
   }
 
-  removeFromCart($mouseEvent, book: Book) {
+  removeBookFromCart($mouseEvent, book: Book) {
     if (book) {
-      this.onRemoveFromCart.emit(book);
+      this.removeFromCart.emit(book);
     }
   }
 
