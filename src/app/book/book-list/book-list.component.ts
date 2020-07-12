@@ -1,44 +1,48 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { Book } from '../book.type';
-import { CartService } from 'src/app/cart/cart.service';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 
-// tslint:disable: no-output-rename
-// tslint:disable: no-output-on-prefix
+import { map } from 'rxjs/operators';
+import { combineLatest } from 'rxjs';
+
+import { Book } from '../book';
+import { CartService } from 'src/app/cart/cart.service';
+import { BookService } from '../book.service';
 
 @Component({
-  selector: 'app-book-list',
-  templateUrl: './book-list.component.html',
-  styleUrls: ['./book-list.component.scss']
+  selector: 'hp-book-list',
+  template: `
+  <div class="col-xs-6 col-md-4 col-lg-3 col-xl-3 mt-2" *ngFor="let book of books$ | async">
+    <hp-book-item [book]="book" (addToCart)="addBookToCart($event)" (removeFromCart)="removeBookFromCart($event)"></hp-book-item>
+  </div>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BookListComponent {
-  private _books: Book[];
 
-  @Output('addToCart') onAddToCart: EventEmitter<Book> = new EventEmitter();
-  @Output('removeFromCart') onRemoveFromCart: EventEmitter<Book> = new EventEmitter();
+  /**
+   * Liste des articles
+   *
+   */
+  public books$ = combineLatest([
+    this.bookService.books$,
+    this.bookService.bookFilteredAction$
+  ]).pipe(
+    map(([books, filterBy]) => books.filter((book: Book) =>
+      filterBy ? book.title.toLocaleLowerCase().indexOf(filterBy.toLocaleLowerCase()) !== -1
+        : true
+    ))
+  );
 
-  @Input()
-  get books(): Book[] {
-    return this._books;
-  }
-  set books(value: Book[]) {
-    this._books = value;
-  }
+  constructor(
+    private bookService: BookService,
+    private cartService: CartService
+  ) { }
 
-  constructor(private cartService: CartService) { }
 
-  addToCart($mouseEvent, book: Book) {
-    if (book) {
-      this.onAddToCart.emit(book);
-    }
-  }
-
-  removeFromCart($mouseEvent, book: Book) {
-    if (book) {
-      this.onRemoveFromCart.emit(book);
-    }
+  addBookToCart(book: Book) {
+    this.cartService.addBookToCart(book);
   }
 
-  bookAlreadyInCart(book: Book): boolean {
-    return this.cartService.bookExistInCard(book);
+  removeBookFromCart(book: Book) {
+    this.cartService.removeBookFromCart(book);
   }
 }
