@@ -13,8 +13,8 @@ describe('BookComponent', () => {
         { provide: BookService, useClass: BookServiceMock }
       ]
     });
-    component = TestBed.get(BookComponent);
-    service = TestBed.get(BookService);
+    component = TestBed.inject<BookComponent>(BookComponent);
+    service = TestBed.inject<BookService>(BookService);
   });
 
   it('should Load the books list from the service at component INIT', (done) => {

@@ -2,6 +2,7 @@ import { Injectable, Inject } from '@angular/core';
 import { LOCAL_STORAGE, StorageService } from 'ngx-webstorage-service';
 import { Book } from '../book/book.type';
 import { BehaviorSubject } from 'rxjs';
+import { Offre } from '../book/offre-commerciale.type';
 
 // key that is used to access the data in local storageconst
 const STORAGE_KEY = 'local_cartitems';
@@ -71,5 +72,30 @@ export class CartService {
   bookExistInCard(book: Book): boolean {
     const currentBooks = this.getBooksFromCart();
     return currentBooks.filter(item => item.isbn === book.isbn).length !== 0;
+  }
+
+  calcBestOffer(offers: Offre[], total: number): number {
+    let totalPercentage: number;
+    let totalMinus: number;
+    let totalSlice: number;
+    let bestOffer = 0;
+    offers.forEach((offer: Offre) => {
+      if (offer.type === 'percentage') {
+        totalPercentage = total - (total * offer.value) / 100;
+      } else if (offer.type === 'minus') {
+        totalMinus = total - offer.value;
+      } else if (offer.type === 'slice') {
+        const X = (total - (total % offer.sliceValue)) / offer.sliceValue;
+        totalSlice = total - offer.value * X;
+      }
+    });
+
+    if (totalMinus && totalSlice) {
+      bestOffer = Math.min(totalPercentage, totalMinus, totalSlice);
+    } else {
+      bestOffer = totalPercentage;
+    }
+
+    return bestOffer;
   }
 }

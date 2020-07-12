@@ -23,7 +23,7 @@ export class CartComponent implements OnInit {
   constructor(
     private cartService: CartService,
     private bookService: BookService
-  ) {}
+  ) { }
 
   ngOnInit() {
     // get items from service
@@ -36,7 +36,7 @@ export class CartComponent implements OnInit {
 
       this.bookService.getOffreCommerciales().subscribe(offreComm => {
         // calc total from best offer
-        this.totalAfterDiscount = this.calcBestOffer(
+        this.totalAfterDiscount = this.cartService.calcBestOffer(
           offreComm.offers,
           this.totalPrice
         );
@@ -47,28 +47,5 @@ export class CartComponent implements OnInit {
    * Calculer la meilleure offre commerciale
    *
    */
-  calcBestOffer(offers: Offre[], total: number): number {
-    let totalPercentage: number;
-    let totalMinus: number;
-    let totalSlice: number;
-    let bestOffer = 0;
-    offers.forEach((offer: Offre) => {
-      if (offer.type === 'percentage') {
-        totalPercentage = total - (total * offer.value) / 100;
-      } else if (offer.type === 'minus') {
-        totalMinus = total - offer.value;
-      } else if (offer.type === 'slice') {
-        const X = (total - (total % offer.sliceValue)) / offer.sliceValue;
-        totalSlice = total - offer.value * X;
-      }
-    });
 
-    if (totalMinus && totalSlice) {
-      bestOffer = Math.min(totalPercentage, totalMinus, totalSlice);
-    } else {
-      bestOffer = totalPercentage;
-    }
-
-    return bestOffer;
-  }
 }
