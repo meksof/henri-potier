@@ -1,0 +1,17 @@
+<div class="card">
+    <img [src]="book.cover" alt="Book cover" class="card-img-top" />
+    <div class="card-body">
+        <h5>{{ book.title }}</h5>
+        <b>Prix:</b> {{ book.price }} <br />
+        <b>Description:</b> {{ book.synopsis[0] | truncate: [40] }} <br />
+        <div *ngIf="!book.isInCartItems; else removeBookBlock" class="btn btn-primary mt-2 pointer"
+            (click)="addBookToCart($event, book)">
+            Ajouter au panier
+        </div>
+        <ng-template #removeBookBlock>
+            <div class="btn btn-danger mt-2 pointer" (click)="removeBookFromCart($event)">
+                Retirer du panier
+            </div>
+        </ng-template>
+    </div>
+</div>

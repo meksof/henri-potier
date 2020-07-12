@@ -1,24 +1,28 @@
 import { Component, OnInit } from '@angular/core';
-import { Cart } from './cart';
+
+import { Observable, of } from 'rxjs';
+import { filter, scan, pluck, concatAll, withLatestFrom, switchMap, tap } from 'rxjs/operators';
+
+import { Book } from '../book/book';
 import { CartService } from './cart.service';
 import { BookService } from '../book/book.service';
-import { OffreCommerciale, Offre } from '../book/offre-commerciale.type';
+import { OffreCommerciale } from '../book/offre-commerciale.type';
 
 @Component({
-  selector: 'app-cart',
+  selector: 'hp-cart',
   template: `
-    <app-cart-list
-      [cartItems]="cartItems"
-      [total]="totalPrice"
-      [totalAfterDiscount]="totalAfterDiscount"
-    ></app-cart-list>
+    <hp-cart-list
+      [cartItems]="cartItems$ | async"
+      [total]="totalPrice$ | async"
+      [totalAfterDiscount]="totalAfterDiscount$ | async"
+    ></hp-cart-list>
   `,
   styles: []
 })
 export class CartComponent implements OnInit {
-  cartItems: Cart[];
-  totalPrice = 0;
-  totalAfterDiscount = 0;
+  cartItems$: Observable<Book[]>;
+  totalPrice$: Observable<number>;
+  totalAfterDiscount$: Observable<number>;
 
   constructor(
     private cartService: CartService,
@@ -27,25 +31,30 @@ export class CartComponent implements OnInit {
 
   ngOnInit() {
     // get items from service
-    this.cartItems = this.cartService.getBooksFromCart();
+    this.cartItems$ = this.cartService.cartItems$;
 
-    if (this.cartItems && this.cartItems.length > 0) {
-      this.cartItems.forEach(item => {
-        this.totalPrice += item.price;
-      });
+    this.totalPrice$ = this.cartItems$.pipe(
+      concatAll(),
+      pluck('price'),
+      scan((acc, price) => acc + price, 0)
+    );
 
-      this.bookService.getOffreCommerciales().subscribe(offreComm => {
-        // calc total from best offer
-        this.totalAfterDiscount = this.cartService.calcBestOffer(
-          offreComm.offers,
-          this.totalPrice
-        );
-      });
-    }
+
+
+    this.totalAfterDiscount$ = this.bookService.getOffreCommerciales()
+      .pipe(
+        filter((offreCom: OffreCommerciale | null) => offreCom !== null),
+        withLatestFrom(this.totalPrice$),
+        switchMap(([offreCom, totalPrice]) =>
+          of(
+            this.cartService.calcBestOffer(
+              offreCom.offers,
+              totalPrice
+            )
+          )
+        )
+      );
+
   }
-  /**
-   * Calculer la meilleure offre commerciale
-   *
-   */
 
 }

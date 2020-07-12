@@ -1,5 +1,5 @@
 import { Observable, of } from 'rxjs';
-import { Book } from './book.type';
+import { Book } from './book';
 let books: Book[] = [
   {
     isbn: 'string',
@@ -12,6 +12,7 @@ let books: Book[] = [
 
 export class BookServiceMock {
   books$ = this.getBooks();
+  bookFilteredAction$ = of('');
   getBooks(): Observable<Book[]> {
     return of(books);
   }

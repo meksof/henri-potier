@@ -1,19 +1,32 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of, throwError } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
-import { Book } from './book.type';
+import { Observable, throwError, BehaviorSubject, combineLatest } from 'rxjs';
+import { catchError, filter, switchMap, map, } from 'rxjs/operators';
+import { Book } from './book';
 import { CartService } from '../cart/cart.service';
 import { OffreCommerciale } from './offre-commerciale.type';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class BookService {
   private booksUrl = 'http://henri-potier.xebia.fr/books';
 
-  public books$ = this.getBooks();
+  /**
+   * Liste de tous les articles
+   *
+   */
+  public books$ = combineLatest([
+    this.getBooks(),
+    this.cartService.cartItems$
+  ]).pipe(
+    map(([books, cartItems]) => books.map((book: Book) => Book.mapBook(book, cartItems)))
+  );
 
+  /**
+   * Le filtre de recherche appliqué à la liste des articles
+   *
+   */
+  private bookFilter$ = new BehaviorSubject<string>('');
+  public bookFilteredAction$ = this.bookFilter$.asObservable();
   constructor(
     private http: HttpClient,
     private cartService: CartService
@@ -27,24 +40,23 @@ export class BookService {
 
   getOffreCommerciales(): Observable<OffreCommerciale> | null {
     // get cart book list from local storage
-    const books = this.cartService.getBooksFromCart();
-
-    if (!books || books.length === 0) {
-      return null;
-    }
-
-    return this.http.get<OffreCommerciale>(
-      this.booksUrl + '/' + this.arrayToBookList(books) + '/commercialOffers'
+    return this.cartService.cartItems$.pipe(
+      filter((books: Book[]) => books.length > 0),
+      switchMap((books: Book[]) =>
+        this.http.get<OffreCommerciale>(
+          this.booksUrl + '/' + this.implodeIsbnBookList(books) + '/commercialOffers'
+        )
+      )
     );
+
   }
 
-  private arrayToBookList(books: Book[]) {
-    let booksIsbnList = '';
-    books.forEach(book => {
-      booksIsbnList += book.isbn + ',';
-    });
-    booksIsbnList = booksIsbnList.replace(/,$/, '');
-    return booksIsbnList;
+  performFilter(filterBy: string) {
+    this.bookFilter$.next(filterBy);
+  }
+
+  private implodeIsbnBookList(books: Book[]) {
+    return books.map(book => book.isbn).join(',');
   }
 
   private handleError(err) {

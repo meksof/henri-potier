@@ -1,64 +1,26 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { BookService } from './book.service';
-import { Book } from './book.type';
-import { CartService } from '../cart/cart.service';
-import { Subject, combineLatest, forkJoin, BehaviorSubject } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-book',
+  selector: 'hp-book',
   template: `
-    <app-book-filter
+    <hp-book-filter
       (filterChange)="performFilter($event)"
       #filterCriteria
-    ></app-book-filter>
-    <app-book-list
+    ></hp-book-filter>
+    <hp-book-list
       class="row mt-3"
-      [books]="books$ | async"
-      (addToCart)="addToCart($event)"
-      (removeFromCart)="removeFromCart($event)"
-    ></app-book-list>
-  `
+    ></hp-book-list>
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BookComponent implements OnDestroy {
-  /**
-   * Le filtre de recherche appliqué à la liste des articles
-   *
-   */
-  private bookFilter$ = new BehaviorSubject<string>('');
-  bookFilteredAction$ = this.bookFilter$.asObservable();
-  /**
-   * Liste des articles
-   *
-   */
-  public books$ = combineLatest([
-    this.bookService.books$,
-    this.bookFilteredAction$
-  ]).pipe(
-    map(([books, filterBy]) => books.filter((book: Book) =>
-      filterBy ? book.title.toLocaleLowerCase().indexOf(filterBy.toLocaleLowerCase()) !== -1
-        : true
-    ))
-  );
+export class BookComponent {
 
   constructor(
-    private bookService: BookService,
-    private cartService: CartService
+    private bookService: BookService
   ) { }
 
-  performFilter(filterBy: string) {
-    this.bookFilter$.next(filterBy);
-  }
-
-  addToCart(book: Book) {
-    this.cartService.addBookToCart(book);
-  }
-
-  removeFromCart(book: Book) {
-    this.cartService.removeBookFromCart(book);
-  }
-
-  ngOnDestroy(): void {
-    this.bookFilter$.complete();
+  performFilter(filterBy): void {
+    this.bookService.performFilter(filterBy);
   }
 }

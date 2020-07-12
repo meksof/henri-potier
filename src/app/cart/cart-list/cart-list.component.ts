@@ -1,32 +1,28 @@
-import { Component, OnInit, Input } from "@angular/core";
-import { Cart } from "../cart";
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Book } from '../../book/book';
 
 @Component({
-  selector: "app-cart-list",
-  templateUrl: "./cart-list.component.html",
-  styleUrls: ["./cart-list.component.scss"]
+  selector: 'hp-cart-list',
+  templateUrl: './cart-list.component.html',
+  styleUrls: ['./cart-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CartListComponent implements OnInit {
+export class CartListComponent {
   /**
    * La liste des Articles dans le panier
    *
-   * @private
-   * @type {Cart[]}
-   * @memberof CartListComponent
    */
-  private _cartItems: Cart[];
-  @Input() get cartItems(): Cart[] {
+  private _cartItems: Book[];
+  @Input() get cartItems(): Book[] {
     return this._cartItems;
   }
-  set cartItems(v: Cart[]) {
+  set cartItems(v: Book[]) {
     this._cartItems = v;
   }
 
   /**
    * Le montant total du panier
    *
-   * @private
-   * @memberof CartListComponent
    */
   private _total;
   @Input() get total(): number {
@@ -39,9 +35,6 @@ export class CartListComponent implements OnInit {
   /**
    * Le montant total du panier après Remise
    *
-   * @private
-   * @type {number}
-   * @memberof CartListComponent
    */
   private _totalAfterDiscount: number;
   @Input() get totalAfterDiscount(): number {
@@ -56,14 +49,9 @@ export class CartListComponent implements OnInit {
   /**
    * Le montant de la remise
    *
-   * @memberof CartListComponent
    */
   public discount = '';
 
   constructor() { }
-
-  ngOnInit() {
-  }
-
 
 }
