@@ -15,11 +15,11 @@ export class BookItemComponent {
 
   constructor(private cartService: CartService) { }
 
-  addBookToCart($mouseEvent) {
+  addBookToCart() {
     this.addToCart.emit(this.book);
   }
 
-  removeBookFromCart($mouseEvent) {
+  removeBookFromCart() {
     this.removeFromCart.emit(this.book);
   }
 }

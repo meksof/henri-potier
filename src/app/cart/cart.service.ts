@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { concatAll, pluck, scan } from 'rxjs/operators';
 import { Book } from '../book/book';
 import { Offre } from '../book/offre-commerciale.type';
 
@@ -9,9 +10,11 @@ export class CartService {
   private cartItemsBS: BehaviorSubject<Book[]> = new BehaviorSubject([]);
 
   public cartItems$ = this.cartItemsBS.asObservable();
-
-  constructor() {
-  }
+  public cartTotalPrice$: Observable<number> = this.cartItems$.pipe(
+    concatAll(),
+    pluck('price'),
+    scan((acc, price) => acc + price, 0),
+  );
 
   /**
    * Ajouter un article au panier

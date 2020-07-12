@@ -14,11 +14,10 @@ export class BookService {
    * Liste de tous les articles
    *
    */
-  public books$ = combineLatest([
-    this.getBooks(),
-    this.cartService.cartItems$
-  ]).pipe(
-    map(([books, cartItems]) => books.map((book: Book) => Book.mapBook(book, cartItems)))
+  public books$ = this.getBooks().pipe(
+    switchMap((books: Book[]) => this.cartService.cartItems$.pipe(
+      map((cartItems: Book[]) => books.map((book: Book) => Book.mapBook(book, cartItems)))
+    ))
   );
 
   /**

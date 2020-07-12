@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 
-import { Observable, of } from 'rxjs';
-import { filter, scan, pluck, concatAll, withLatestFrom, switchMap, tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { filter, switchMap, map } from 'rxjs/operators';
 
 import { Book } from '../book/book';
 import { CartService } from './cart.service';
@@ -17,10 +17,10 @@ import { OffreCommerciale } from '../book/offre-commerciale.type';
       [totalAfterDiscount]="totalAfterDiscount$ | async"
     ></hp-cart-list>
   `,
-  styles: []
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CartComponent implements OnInit {
-  cartItems$: Observable<Book[]>;
+  cartItems$: Observable<Book[]> = this.cartService.cartItems$;
   totalPrice$: Observable<number>;
   totalAfterDiscount$: Observable<number>;
 
@@ -30,31 +30,19 @@ export class CartComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    // get items from service
-    this.cartItems$ = this.cartService.cartItems$;
-
-    this.totalPrice$ = this.cartItems$.pipe(
-      concatAll(),
-      pluck('price'),
-      scan((acc, price) => acc + price, 0)
-    );
-
-
+    this.totalPrice$ = this.cartService.cartTotalPrice$;
 
     this.totalAfterDiscount$ = this.bookService.getOffreCommerciales()
       .pipe(
         filter((offreCom: OffreCommerciale | null) => offreCom !== null),
-        withLatestFrom(this.totalPrice$),
-        switchMap(([offreCom, totalPrice]) =>
-          of(
-            this.cartService.calcBestOffer(
+        switchMap((offreCom: OffreCommerciale) =>
+          this.cartService.cartTotalPrice$.pipe(
+            map((totalPrice: number) => this.cartService.calcBestOffer(
               offreCom.offers,
               totalPrice
-            )
+            ))
           )
         )
       );
-
   }
-
 }
