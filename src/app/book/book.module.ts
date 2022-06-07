@@ -9,7 +9,8 @@ import { BookComponent } from './book.component';
 import { BookItemComponent } from './book-list/book-item/book-item.component';
 
 @NgModule({
-  declarations: [BookListComponent, BookFilterComponent, BookComponent, BookItemComponent],
-  imports: [CommonModule, BookRoutingModule, SharedModule]
+    declarations: [BookListComponent, BookFilterComponent, BookComponent, BookItemComponent],
+    imports: [CommonModule, BookRoutingModule, SharedModule]
 })
-export class BookModule { }
+export class BookModule
+{ }

@@ -10,15 +10,16 @@ import { CartModule } from './cart/cart.module';
 import { CartService } from './cart/cart.service';
 
 @NgModule({
-  declarations: [AppComponent],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BookModule,
-    HttpClientModule,
-    CartModule
-  ],
-  providers: [BookService, CartService],
-  bootstrap: [AppComponent]
+    declarations: [AppComponent],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        BookModule,
+        HttpClientModule,
+        CartModule
+    ],
+    providers: [BookService, CartService],
+    bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule
+{ }

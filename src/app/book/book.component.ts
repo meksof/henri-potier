@@ -2,8 +2,8 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { BookService } from './book.service';
 
 @Component({
-  selector: 'hp-book',
-  template: `
+    selector: 'hp-book',
+    template: `
     <hp-book-filter
       (filterChange)="performFilter($event)"
       #filterCriteria
@@ -12,15 +12,18 @@ import { BookService } from './book.service';
       class="row mt-3"
     ></hp-book-list>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BookComponent {
+export class BookComponent
+{
 
-  constructor(
+    constructor (
     private bookService: BookService
-  ) { }
+    )
+    { }
 
-  performFilter(filterBy: string): void {
-    this.bookService.performFilter(filterBy);
-  }
+    performFilter (filterBy: string): void
+    {
+        this.bookService.performFilter(filterBy);
+    }
 }

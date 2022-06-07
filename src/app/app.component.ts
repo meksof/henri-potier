@@ -8,7 +8,8 @@ import { CartService } from './cart/cart.service';
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit
+{
     title = 'henri-potier';
     /**
      * Représente le nombre total d'articles dans le panier
@@ -16,9 +17,11 @@ export class AppComponent implements OnInit {
      */
     public cartTotalItems$: Observable<number> | undefined;
 
-    constructor(private cartService: CartService) { }
+    constructor (private cartService: CartService)
+    { }
 
-    ngOnInit() {
+    ngOnInit ()
+    {
         this.cartTotalItems$ = this.cartService.cartItems$.pipe(
             map(ci => ci.length)
         );
