@@ -1,6 +1,6 @@
 import { Observable, of } from 'rxjs';
 import { Book } from './book';
-let books: Book[] = [
+const books: Book[] = [
   {
     isbn: 'string',
     title: 'string',

@@ -27,7 +27,7 @@ export class BookListComponent {
     this.bookService.bookFilteredAction$
   ]).pipe(
     map(([books, filterBy]) => books.filter((book: Book) =>
-      filterBy ? book.title.toLocaleLowerCase().indexOf(filterBy.toLocaleLowerCase()) !== -1
+      filterBy ? book.title?.toLocaleLowerCase().indexOf(filterBy.toLocaleLowerCase()) !== -1
         : true
     ))
   );

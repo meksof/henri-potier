@@ -4,7 +4,7 @@
     <ul class="navbar-nav float-right">
       <li class="text-right navbar-item">
         <a routerLink="cart" class="pointer">Panier: <b>{{ cartTotalItems$ | async }} </b>
-          article{{ (cartTotalItems$ | async)  > 1 ? 's': '' }}</a>
+          article{{ (cartTotalItems$ | async)!  > 1 ? 's': '' }}</a>
       </li>
     </ul>
   </nav>

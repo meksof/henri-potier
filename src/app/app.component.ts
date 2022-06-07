@@ -4,23 +4,23 @@ import { map } from 'rxjs/operators';
 import { CartService } from './cart/cart.service';
 
 @Component({
-  selector: 'hp-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+    selector: 'hp-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  title = 'henri-potier';
-  /**
-   * Représente le nombre total d'articles dans le panier
-   *
-   */
-  public cartTotalItems$: Observable<number>;
+    title = 'henri-potier';
+    /**
+     * Représente le nombre total d'articles dans le panier
+     *
+     */
+    public cartTotalItems$: Observable<number> | undefined;
 
-  constructor(private cartService: CartService) { }
+    constructor(private cartService: CartService) { }
 
-  ngOnInit() {
-    this.cartTotalItems$ = this.cartService.cartItems$.pipe(
-      map(ci => ci.length)
-    );
-  }
+    ngOnInit() {
+        this.cartTotalItems$ = this.cartService.cartItems$.pipe(
+            map(ci => ci.length)
+        );
+    }
 }

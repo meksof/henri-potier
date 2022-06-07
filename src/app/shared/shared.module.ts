@@ -3,8 +3,9 @@ import { CommonModule } from '@angular/common';
 import { TruncatePipe } from './pipes/truncate.pipe';
 
 @NgModule({
-  declarations: [TruncatePipe],
-  imports: [CommonModule],
-  exports: [TruncatePipe]
+    declarations: [TruncatePipe],
+    imports: [CommonModule],
+    exports: [TruncatePipe]
 })
-export class SharedModule { }
+export class SharedModule
+{ }

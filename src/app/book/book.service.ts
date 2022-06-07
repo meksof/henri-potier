@@ -37,7 +37,7 @@ export class BookService {
     );
   }
 
-  getOffreCommerciales(): Observable<OffreCommerciale> | null {
+  getOffreCommerciales(): Observable<OffreCommerciale> {
     // get cart book list from local storage
     return this.cartService.cartItems$.pipe(
       filter((books: Book[]) => books.length > 0),
@@ -58,7 +58,7 @@ export class BookService {
     return books.map(book => book.isbn).join(',');
   }
 
-  private handleError(err) {
+  private handleError(err: any) {
     let errorMessage: string;
     if (err && err.error instanceof ErrorEvent) {
       errorMessage = `An error occurred: ${err.error.message}`;

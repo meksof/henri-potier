@@ -9,40 +9,43 @@ import { BookService } from '../book/book.service';
 import { OffreCommerciale } from '../book/offre-commerciale.type';
 
 @Component({
-  selector: 'hp-cart',
-  template: `
+    selector: 'hp-cart',
+    template: `
     <hp-cart-list
-      [cartItems]="cartItems$ | async"
-      [total]="totalPrice$ | async"
-      [totalAfterDiscount]="totalAfterDiscount$ | async"
+      [cartItems]="(cartItems$ | async)!"
+      [total]="(totalPrice$ | async)!"
+      [totalAfterDiscount]="(totalAfterDiscount$ | async)!"
     ></hp-cart-list>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CartComponent implements OnInit {
-  cartItems$: Observable<Book[]> = this.cartService.cartItems$;
-  totalPrice$: Observable<number>;
-  totalAfterDiscount$: Observable<number>;
+export class CartComponent implements OnInit
+{
+    cartItems$: Observable<Book[]> = this.cartService.cartItems$;
+    totalPrice$!: Observable<number>;
+    totalAfterDiscount$!: Observable<number>;
 
-  constructor(
-    private cartService: CartService,
-    private bookService: BookService
-  ) { }
+    constructor (
+        private cartService: CartService,
+        private bookService: BookService
+    )
+    { }
 
-  ngOnInit() {
-    this.totalPrice$ = this.cartService.cartTotalPrice$;
+    ngOnInit ()
+    {
+        this.totalPrice$ = this.cartService.cartTotalPrice$;
 
-    this.totalAfterDiscount$ = this.bookService.getOffreCommerciales()
-      .pipe(
-        filter((offreCom: OffreCommerciale | null) => offreCom !== null),
-        switchMap((offreCom: OffreCommerciale) =>
-          this.cartService.cartTotalPrice$.pipe(
-            map((totalPrice: number) => this.cartService.calcBestOffer(
-              offreCom.offers,
-              totalPrice
-            ))
-          )
-        )
-      );
-  }
+        this.totalAfterDiscount$ = this.bookService.getOffreCommerciales()
+            .pipe(
+                filter((offreCom: OffreCommerciale) => offreCom !== null),
+                switchMap((offreCom: OffreCommerciale) =>
+                    this.cartService.cartTotalPrice$.pipe(
+                        map((totalPrice: number) => this.cartService.calcBestOffer(
+                            offreCom.offers,
+                            totalPrice
+                        ))
+                    )
+                )
+            );
+    }
 }

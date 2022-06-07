@@ -1,8 +1,8 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 
 @Component({
-  selector: 'hp-book-filter',
-  template: `<input
+    selector: 'hp-book-filter',
+    template: `<input
     type="text"
     id="search"
     class="form-control"
@@ -10,10 +10,12 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
     (keyup)="firefilterEvent($event)"
   />`
 })
-export class BookFilterComponent {
-  @Output() filterChange: EventEmitter<string> = new EventEmitter();
+export class BookFilterComponent
+{
+    @Output() filterChange: EventEmitter<string> = new EventEmitter();
 
-  firefilterEvent($event) {
-    this.filterChange.emit($event.target.value);
-  }
+    firefilterEvent ($event: any)
+    {
+        this.filterChange.emit($event.target.value);
+    }
 }

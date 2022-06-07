@@ -4,41 +4,43 @@ import { BookService } from '../book.service';
 import { BookServiceMock } from '../book.service.mock';
 import { CartService } from 'src/app/cart/cart.service';
 
-describe('BookListComponent', () => {
-  let component: BookListComponent;
-  let service: BookService;
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [
-        BookListComponent,
-        { provide: BookService, useClass: BookServiceMock },
+describe('BookListComponent', () =>
+{
+    let component: BookListComponent;
+    beforeEach(() =>
+    {
+        TestBed.configureTestingModule({
+            providers: [
+                BookListComponent,
+                { provide: BookService, useClass: BookServiceMock },
+                {
+                    provide: CartService, useValue: jasmine.createSpyObj('CartService', {
+                        addBookToCart: jasmine.createSpy()
+                    })
+                }
+            ]
+        });
+        component = TestBed.inject<BookListComponent>(BookListComponent);
+    });
+
+    it('should Load the books list from the service at component INIT', (done) =>
+    {
+        const expectedResult: any = [
+            {
+                isbn: 'string',
+                title: 'string',
+                price: 20,
+                cover: 'string',
+                synopsis: ['string']
+            }
+        ];
+        let returnedResult = {};
+
+        component.books$.subscribe(books =>
         {
-          provide: CartService, useValue: jasmine.createSpyObj('CartService', {
-            addBookToCart: jasmine.createSpy()
-          })
-        }
-      ]
+            returnedResult = books;
+            done();
+        });
+        expect(returnedResult).toEqual(expectedResult);
     });
-    component = TestBed.inject<BookListComponent>(BookListComponent);
-    service = TestBed.inject<BookService>(BookService);
-  });
-
-  it('should Load the books list from the service at component INIT', (done) => {
-    const expectedResult: any = [
-      {
-        isbn: 'string',
-        title: 'string',
-        price: 20,
-        cover: 'string',
-        synopsis: ['string']
-      }
-    ];
-    let returnedResult = {};
-
-    component.books$.subscribe(books => {
-      returnedResult = books;
-      done();
-    });
-    expect(returnedResult).toEqual(expectedResult);
-  });
 });
