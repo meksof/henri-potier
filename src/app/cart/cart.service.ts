@@ -8,9 +8,19 @@ import { Offre } from '../book/offre-commerciale.type';
 export class CartService
 {
     private _cartItems: Book[] = [];
-    private cartItemsBS: Subject<Book[]> = new Subject();
+    private get cartItems (): Book[]
+    {
+        this._sCartItems.next(this._cartItems);
 
-    public cartItems$ = this.cartItemsBS.asObservable();
+        return this._cartItems;
+    }
+    private set cartItems (value: Book[])
+    {
+        this._cartItems = value;
+    }
+    private _sCartItems: Subject<Book[]> = new Subject();
+
+    public cartItems$ = this._sCartItems.asObservable();
     public cartTotalPrice$: Observable<number> = this.cartItems$.pipe(
         concatAll(),
         pluck('price'),
@@ -23,8 +33,7 @@ export class CartService
    */
     addBookToCart (book: Book): void
     {
-        this._cartItems.push(book);
-        this.cartItemsBS.next(this._cartItems);
+        this.cartItems.push(book);
     }
 
     /**
@@ -33,9 +42,7 @@ export class CartService
    */
     removeBookFromCart (book: Book): void
     {
-        // remove book from list
-        this._cartItems = this._cartItems.filter(item => item.isbn !== book.isbn);
-        this.cartItemsBS.next(this._cartItems);
+        this.cartItems = this.cartItems.filter(item => item.isbn !== book.isbn);
     }
 
     /**
@@ -45,10 +52,10 @@ export class CartService
     calcBestOffer (offers: Offre[], total: number): number
     {
         let totalPercentage = 0;
-        let totalMinus = 0;
+        let totalDiscount = 0;
         let totalSlice = 0;
         let bestOffer = 0;
-        offers.forEach((offer: Offre) =>
+        offers.map((offer: Offre) =>
         {
             if (offer.type === 'percentage')
             {
@@ -56,7 +63,7 @@ export class CartService
             }
             else if (offer.type === 'minus')
             {
-                totalMinus = total - offer.value;
+                totalDiscount = total - offer.value;
             }
             else if (offer.type === 'slice' && offer.sliceValue)
             {
@@ -65,9 +72,9 @@ export class CartService
             }
         });
 
-        if (totalMinus && totalSlice)
+        if (totalDiscount && totalSlice)
         {
-            bestOffer = Math.min(totalPercentage, totalMinus, totalSlice);
+            bestOffer = Math.min(totalPercentage, totalDiscount, totalSlice);
         }
         else
         {

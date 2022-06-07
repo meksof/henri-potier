@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { CartService } from './cart/cart.service';
 
@@ -10,19 +10,15 @@ import { CartService } from './cart/cart.service';
 })
 export class AppComponent implements OnInit
 {
-    title = 'henri-potier';
-    /**
-     * Représente le nombre total d'articles dans le panier
-     *
-     */
-    public cartTotalItems$: Observable<number> | undefined;
+    public title = 'henri-potier';
+    public cartItemsSize$: Observable<number> = of(0);
 
     constructor (private cartService: CartService)
     { }
 
     ngOnInit ()
     {
-        this.cartTotalItems$ = this.cartService.cartItems$.pipe(
+        this.cartItemsSize$ = this.cartService.cartItems$.pipe(
             map(ci => ci.length)
         );
     }
