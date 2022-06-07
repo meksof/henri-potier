@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, throwError, BehaviorSubject, combineLatest } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { catchError, filter, switchMap, map, startWith, } from 'rxjs/operators';
 import { Book } from './book';
 import { CartService } from '../cart/cart.service';
 import { OffreCommerciale } from './offre-commerciale.type';
+import { ErrorHandler } from '../shared/services/error-handler.service';
 
 @Injectable()
 export class BookService
@@ -40,7 +41,7 @@ export class BookService
     getBooks (): Observable<Book[]>
     {
         return this.http.get<Book[]>(this.booksUrl).pipe(
-            catchError(this.handleError)
+            catchError(ErrorHandler.Throw)
         );
     }
 
@@ -67,18 +68,4 @@ export class BookService
         return books.map(book => book.isbn).join(',');
     }
 
-    private handleError (err: any)
-    {
-        let errorMessage: string;
-        if (err && err.error instanceof ErrorEvent)
-        {
-            errorMessage = `An error occurred: ${err.error.message}`;
-        }
-        else
-        {
-            errorMessage = `Backend returned code ${err.status}: ${err.body.error}`;
-        }
-
-        return throwError(errorMessage);
-    }
 }
