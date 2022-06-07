@@ -1,6 +1,7 @@
 import { Observable, of } from 'rxjs';
 import { Book } from './book';
-const books: Book[] = [
+
+export const fakeBooks: Book[] = [
     {
         isbn: 'string',
         title: 'string',
@@ -16,6 +17,6 @@ export class BookServiceMock
     bookFilteredAction$ = of('');
     getBooks (): Observable<Book[]>
     {
-        return of(books);
+        return of(fakeBooks);
     }
 }

@@ -18,7 +18,7 @@ export class BookComponent
 {
 
     constructor (
-    private bookService: BookService
+        private bookService: BookService
     )
     { }
 

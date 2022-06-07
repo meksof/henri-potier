@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError, BehaviorSubject, combineLatest } from 'rxjs';
-import { catchError, filter, switchMap, map, } from 'rxjs/operators';
+import { catchError, filter, switchMap, map, startWith, } from 'rxjs/operators';
 import { Book } from './book';
 import { CartService } from '../cart/cart.service';
 import { OffreCommerciale } from './offre-commerciale.type';
@@ -16,9 +16,13 @@ export class BookService
    *
    */
     public books$ = this.getBooks().pipe(
-        switchMap((books: Book[]) => this.cartService.cartItems$.pipe(
-            map((cartItems: Book[]) => books.map((book: Book) => Book.mapBook(book, cartItems)))
-        ))
+        switchMap((books: Book[]) =>
+            this.cartService.cartItems$
+                .pipe(
+                    startWith([]), // Démarrer avec un panier vide !
+                    map((cartItems: Book[]) => books.map((book: Book) => Book.mapBook(book, cartItems)))
+                )
+        )
     );
 
     /**
@@ -28,8 +32,8 @@ export class BookService
     private bookFilter$ = new BehaviorSubject<string>('');
     public bookFilteredAction$ = this.bookFilter$.asObservable();
     constructor (
-    private http: HttpClient,
-    private cartService: CartService
+        private http: HttpClient,
+        private cartService: CartService
     )
     { }
 
@@ -42,7 +46,6 @@ export class BookService
 
     getOffreCommerciales (): Observable<OffreCommerciale>
     {
-    // get cart book list from local storage
         return this.cartService.cartItems$.pipe(
             filter((books: Book[]) => books.length > 0),
             switchMap((books: Book[]) =>

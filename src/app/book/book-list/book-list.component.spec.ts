@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { BookListComponent } from './book-list.component';
 import { BookService } from '../book.service';
-import { BookServiceMock } from '../book.service.mock';
+import { BookServiceMock, fakeBooks } from '../book.service.mock';
 import { CartService } from 'src/app/cart/cart.service';
 
 describe('BookListComponent', () =>
@@ -25,15 +25,7 @@ describe('BookListComponent', () =>
 
     it('should Load the books list from the service at component INIT', (done) =>
     {
-        const expectedResult: any = [
-            {
-                isbn: 'string',
-                title: 'string',
-                price: 20,
-                cover: 'string',
-                synopsis: ['string']
-            }
-        ];
+        const expectedResult: any = fakeBooks;
         let returnedResult = {};
 
         component.books$.subscribe(books =>

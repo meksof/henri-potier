@@ -33,7 +33,7 @@ export class CartService
    */
     removeBookFromCart (book: Book): void
     {
-    // remove book from list
+        // remove book from list
         this._cartItems = this._cartItems.filter(item => item.isbn !== book.isbn);
         this.cartItemsBS.next(this._cartItems);
     }
