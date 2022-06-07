@@ -1,1 +1,22 @@
 /* You can add global styles to this file, and also import other style files */
+@import "~bootstrap/scss/bootstrap";
+
+.clearfix {
+    &::after {
+        display: block;
+        content: "";
+        clear: both;
+    }
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.fz18 {
+    font-size: 18px;
+}
+
+.fwb {
+    font-weight: bold;
+}

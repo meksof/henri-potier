@@ -1,0 +1,9 @@
+.panier {
+    font-weight: normal;
+}
+
+.navbar-brand {
+    &:hover {
+        text-decoration: underline;
+    }
+}
