@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 
 import { Observable } from 'rxjs';
-import { filter, switchMap, map } from 'rxjs/operators';
+import { filter, map, tap } from 'rxjs/operators';
 
 import { Book } from '../book/book';
 import { CartService } from './cart.service';
@@ -13,7 +13,7 @@ import { OffreCommerciale } from '../book/offre-commerciale.type';
     template: `
     <hp-cart-list
       [cartItems]="(cartItems$ | async)!"
-      [total]="(totalPrice$ | async)!"
+      [total]="totalPrice"
       [totalAfterDiscount]="(totalAfterDiscount$ | async)!"
     ></hp-cart-list>
   `,
@@ -21,8 +21,8 @@ import { OffreCommerciale } from '../book/offre-commerciale.type';
 })
 export class CartComponent implements OnInit
 {
-    cartItems$: Observable<Book[]> = this.cartService.cartItems$;
-    totalPrice$!: Observable<number>;
+    cartItems$!: Observable<Book[]>;
+    totalPrice!: number;
     totalAfterDiscount$!: Observable<number>;
 
     constructor (
@@ -33,17 +33,21 @@ export class CartComponent implements OnInit
 
     ngOnInit ()
     {
-        this.totalPrice$ = this.cartService.cartTotalPrice$;
+        this.cartItems$  = this.cartService.cartItems$
+            .pipe(
+                tap(() =>
+                {
+                    this.totalPrice = this.cartService.cartTotalPrice;
+                })
+            );
 
         this.totalAfterDiscount$ = this.bookService.getOffreCommerciales()
             .pipe(
                 filter((offreCom: OffreCommerciale) => offreCom !== null),
-                switchMap((offreCom: OffreCommerciale) =>
-                    this.cartService.cartTotalPrice$.pipe(
-                        map((totalPrice: number) => this.cartService.calcBestOffer(
-                            offreCom.offers,
-                            totalPrice
-                        ))
+                map((offreCom: OffreCommerciale) =>
+                    this.cartService.calcBestOffer(
+                        offreCom.offers,
+                        this.totalPrice
                     )
                 )
             );

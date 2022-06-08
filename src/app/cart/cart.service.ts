@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { concatAll, pluck, scan } from 'rxjs/operators';
+import { concatAll, distinctUntilChanged, pluck, scan, shareReplay, tap } from 'rxjs/operators';
 import { Book } from '../book/book';
 import { Offre } from '../book/offre-commerciale.type';
 
@@ -8,24 +8,28 @@ import { Offre } from '../book/offre-commerciale.type';
 export class CartService
 {
     private _cartItems: Book[] = [];
+    private _cartTotalPrice = 0;
     private get cartItems (): Book[]
     {
-        this._sCartItems.next(this._cartItems);
-
         return this._cartItems;
     }
     private set cartItems (value: Book[])
     {
+        this._sCartItems.next(value);
         this._cartItems = value;
+        this._cartTotalPrice = this._cartItems.reduce(
+            (acc, book: Book) => acc + (book.price || 0), 0
+        );
     }
-    private _sCartItems: Subject<Book[]> = new Subject();
+    private readonly _sCartItems: Subject<Book[]> = new Subject();
 
-    public cartItems$ = this._sCartItems.asObservable();
-    public cartTotalPrice$: Observable<number> = this.cartItems$.pipe(
-        concatAll(),
-        pluck('price'),
-        scan((acc, price) => acc + (price || 0), 0),
+    public cartItems$ = this._sCartItems.asObservable().pipe(
+        shareReplay()
     );
+    public get cartTotalPrice ()
+    {
+        return this._cartTotalPrice;
+    }
 
     /**
    * Ajouter un article au panier
@@ -33,7 +37,7 @@ export class CartService
    */
     addBookToCart (book: Book): void
     {
-        this.cartItems.push(book);
+        this.cartItems = [...this._cartItems, book];
     }
 
     /**
