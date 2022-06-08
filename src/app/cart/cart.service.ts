@@ -23,7 +23,7 @@ export class CartService
     }
     private readonly _sCartItems: Subject<Book[]> = new Subject();
 
-    public cartItems$ = this._sCartItems.asObservable().pipe(
+    public readonly cartItems$ = this._sCartItems.asObservable().pipe(
         shareReplay()
     );
     public get cartTotalPrice ()
