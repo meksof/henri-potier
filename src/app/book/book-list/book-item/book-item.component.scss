@@ -8,3 +8,14 @@
         height: 300px;
     }
 }
+
+.description {
+    overflow-y: auto;
+    height: 100px;
+}
+
+.price {
+    padding: 16px 0;
+    font-size: 22px;
+    text-align: right;
+}

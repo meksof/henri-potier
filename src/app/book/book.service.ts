@@ -10,21 +10,22 @@ import { ErrorHandler } from '../shared/services/error-handler.service';
 @Injectable()
 export class BookService
 {
-    private booksUrl = 'http://henri-potier.xebia.fr/books';
+    private apiUrl = 'http://henri-potier.xebia.fr/books';
 
     /**
    * Liste de tous les articles
    *
    */
-    public books$ = this.getBooks().pipe(
-        switchMap((books: Book[]) =>
-            this.cartService.cartItems$
-                .pipe(
-                    startWith([]), // Démarrer avec un panier vide !
-                    map((cartItems: Book[]) => books.map((book: Book) => Book.mapBook(book, cartItems)))
-                )
-        )
-    );
+    public books$ = this.getBooks()
+        .pipe(
+            switchMap((books: Book[]) =>
+                this.cartService.cartItems$
+                    .pipe(
+                        startWith([]), // Démarrer avec un panier vide !
+                        map((cartItems: Book[]) => books.map((book: Book) => Book.mapBook(book, cartItems)))
+                    )
+            )
+        );
 
     /**
    * Le filtre de recherche appliqué à la liste des articles
@@ -40,21 +41,23 @@ export class BookService
 
     getBooks (): Observable<Book[]>
     {
-        return this.http.get<Book[]>(this.booksUrl).pipe(
-            catchError(ErrorHandler.Throw)
-        );
+        return this.http.get<Book[]>(this.apiUrl)
+            .pipe(
+                catchError(ErrorHandler.Throw)
+            );
     }
 
     getOffreCommerciales (): Observable<OffreCommerciale>
     {
-        return this.cartService.cartItems$.pipe(
-            filter((books: Book[]) => books.length > 0),
-            switchMap((books: Book[]) =>
-                this.http.get<OffreCommerciale>(
-                    this.booksUrl + '/' + this.implodeIsbnBookList(books) + '/commercialOffers'
+        return this.cartService.cartItems$
+            .pipe(
+                filter((books: Book[]) => books.length > 0),
+                switchMap((books: Book[]) =>
+                    this.http.get<OffreCommerciale>(
+                        `${this.apiUrl}/${this.implodeIsbnBookList(books)}/commercialOffers`
+                    )
                 )
-            )
-        );
+            );
 
     }
 

@@ -1,9 +1,9 @@
-<div class="card" *ngIf="book !== undefined">
+<div class="card" *ngIf="book">
     <img [src]="book.cover" alt="Book cover" class="card-img-top" />
     <div class="card-body">
         <h5>{{ book.title }}</h5>
-        <b>Prix:</b> {{ book.price }} <br />
-        <b>Description:</b> {{ book.synopsis ? book.synopsis[0] : '' | truncate: [40] }} <br />
+        <div class="description">{{ book.description }}</div>
+        <div class="price">{{ book.price | currency:"EUR":"symbol" }}</div> 
         <div *ngIf="!book.isInCartItems; else removeBookBlock" class="btn btn-primary mt-2 pointer"
             (click)="addBookToCart()">
             Ajouter au panier
