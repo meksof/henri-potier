@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
-import { concatAll, distinctUntilChanged, pluck, scan, shareReplay, tap } from 'rxjs/operators';
+import { shareReplay } from 'rxjs/operators';
 import { Book } from '../book/book';
 import { Offre } from '../book/offre-commerciale.type';
 
@@ -23,7 +23,7 @@ export class CartService
     }
     private readonly _sCartItems: Subject<Book[]> = new Subject();
 
-    public cartItems$ = this._sCartItems.asObservable().pipe(
+    public readonly cartItems$ = this._sCartItems.asObservable().pipe(
         shareReplay()
     );
     public get cartTotalPrice ()
