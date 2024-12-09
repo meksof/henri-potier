@@ -73,10 +73,10 @@
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "configurations": {
                         "production": {
-                            "browserTarget": "henri-potier-ng14:build:production"
+                          "buildTarget": "henri-potier-ng14:build:production"
                         },
                         "development": {
-                            "browserTarget": "henri-potier-ng14:build:development"
+                          "buildTarget": "henri-potier-ng14:build:development"
                         }
                     },
                     "defaultConfiguration": "development"
@@ -84,7 +84,7 @@
                 "extract-i18n": {
                     "builder": "@angular-devkit/build-angular:extract-i18n",
                     "options": {
-                        "browserTarget": "henri-potier-ng14:build"
+                      "buildTarget": "henri-potier-ng14:build"
                     }
                 },
                 "test": {
