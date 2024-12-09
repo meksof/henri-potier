@@ -1,3 +1,6 @@
 {
-    "editor.tabSize": 4
+    "editor.tabSize": 4,
+    "editor.detectIndentation": false,
+    "files.encoding": "utf8",
+    "liveServer.settings.root": "/dist/henri-potier-ng14/"
 }

@@ -1,6 +1,8 @@
-/* You can add global styles to this file, and also import other style files */
-@import "~bootstrap/scss/bootstrap";
-
+/*** Buttons ***/
+.btn {
+    font-weight: 700;
+}
+/*** Helpers ***/
 .clearfix {
     &::after {
         display: block;
@@ -19,4 +21,12 @@
 
 .fwb {
     font-weight: bold;
+}
+
+.overflow-ellipsis {
+    display: -webkit-box;
+    line-clamp: 3;
+    -webkit-line-clamp: 3;
+    -moz-box-orient: vertical;
+    -webkit-box-orient: vertical;
 }
