@@ -8,9 +8,10 @@ import { BookModule } from './book/book.module';
 import { BookService } from './book/book.service';
 import { CartModule } from './cart/cart.module';
 import { CartService } from './cart/cart.service';
+import { CartLinkComponent } from './cart-link/cart-link.component';
 
 @NgModule({
-    declarations: [AppComponent],
+    declarations: [AppComponent, CartLinkComponent],
     imports: [
         BrowserModule,
         AppRoutingModule,

@@ -1,12 +1,7 @@
 <div class="container">
-    <nav class="navbar navbar-light bg-light mb-5">
+    <nav class="navbar navbar-light mb-5">
         <a routerLink="/" class="navbar-brand">Henri Potier</a>
-        <ul class="navbar-nav float-right">
-            <li class="text-right navbar-item">
-                <a routerLink="cart" class="pointer">Panier: <b>{{ cartItemsSize$ | async }} </b>
-                    article{{ (cartItemsSize$ | async)! > 1 ? 's': '' }}</a>
-            </li>
-        </ul>
+        <hp-cart-link [size]="(cartItemsSize$ | async)!"></hp-cart-link>
     </nav>
     <router-outlet></router-outlet>
 </div>

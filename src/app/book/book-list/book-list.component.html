@@ -1,0 +1,14 @@
+@if (books$ | async; as books) {
+        @for (book of books; track book.isbn) {
+            <div class="col-xs-6 col-md-4 col-lg-3 col-xl-3 mt-2">
+                <hp-book-item [book]="book" (addToCart)="addBookToCart($event)"
+                    (removeFromCart)="removeBookFromCart($event)"></hp-book-item>
+            </div>
+        } @empty {
+            <div style="display: flex; align-items: center; justify-content: center; flex: 1; font-size: 36px">
+                <div>There is no book with this search keyword. Try another keyword</div>
+            </div>
+        }
+} @else {
+    <!-- SOME ERROR HAS OCCURED !! -->
+}

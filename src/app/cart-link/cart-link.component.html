@@ -1,0 +1,8 @@
+@if (size !== 0) {
+    <a routerLink="cart" class="pointer">
+        Panier: <b>{{ size }} </b>article{{ size! > 1 ? 's': '' }}
+    </a>
+}
+@else {
+    Panier vide
+}

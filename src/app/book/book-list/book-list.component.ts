@@ -9,20 +9,11 @@ import { BookService } from '../book.service';
 
 @Component({
     selector: 'hp-book-list',
-    template: `
-<div class="col-xs-6 col-md-4 col-lg-3 col-xl-3 mt-2" *ngFor="let book of (books$ | async)">
-    <hp-book-item [book]="book" (addToCart)="addBookToCart($event)" (removeFromCart)="removeBookFromCart($event)"></hp-book-item>
-</div>
-`,
+    templateUrl: "./book-list.component.html",
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BookListComponent
 {
-
-    /**
-   * Liste des articles
-   *
-   */
     public books$: Observable<Book[]> = combineLatest([
         this.bookService.books$,
         this.bookService.bookFilteredAction$
